@@ -1,0 +1,18 @@
+# Binaries
+whatsapp-broadcast
+whatsapp-broadcast.exe
+whatsapp-broadcast-*
+
+# WhatsApp session data
+whatsapp-data/
+
+# Go build artifacts
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go workspace file
+go.work
