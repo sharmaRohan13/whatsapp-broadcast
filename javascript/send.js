@@ -80,7 +80,7 @@ console.log(`dataPath: ${path.join(__dirname, '.wwebjs_auth')}`);
 const client = new Client({
   authStrategy: new LocalAuth({
     dataPath: path.join(__dirname, '.wwebjs_auth'),
-    clientId: 'client-one'
+    clientId: 'whatsapp-node-client'
   }),
   puppeteer: {
     headless: true,
