@@ -39,34 +39,72 @@ func main() {
 
 	scanner := bufio.NewScanner(os.Stdin)
 
-	// Prompt for numbers file if not provided
-	if *numbersPath == "" {
-		fmt.Print("📋 Enter path to numbers CSV file (default: ../sample/numbers.csv): ")
-		scanner.Scan()
-		input := strings.TrimSpace(scanner.Text())
-		if input == "" {
-			*numbersPath = "../sample/numbers.csv"
-		} else {
-			*numbersPath = input
-		}
+	// Setup default directory in Downloads
+	homeDir, _ := os.UserHomeDir()
+	defaultDir := filepath.Join(homeDir, "Downloads", "whatsapp-broadcast")
+	
+	// Create directory if it doesn't exist
+	if err := os.MkdirAll(defaultDir, 0755); err != nil {
+		fmt.Printf("❌ Failed to create directory: %v\n", err)
+		os.Exit(1)
 	}
+	
+	numbersFilePath := filepath.Join(defaultDir, "numbers.csv")
+	messageFilePath := filepath.Join(defaultDir, "message.txt")
+	
+	// Check if sample files need to be created
+	needSetup := false
+	
+	// Copy numbers.csv if it doesn't exist
+	if _, err := os.Stat(numbersFilePath); os.IsNotExist(err) {
+		needSetup = true
+		fmt.Println("🔧 First time setup detected!")
+		numbersContent := []byte("name,number\nJohn Doe,+919705937595\n")
+		if err := os.WriteFile(numbersFilePath, numbersContent, 0644); err != nil {
+			fmt.Printf("❌ Failed to create numbers.csv: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Printf("✅ Created: %s\n", numbersFilePath)
+	}
+	
+	// Copy message.txt if it doesn't exist
+	if _, err := os.Stat(messageFilePath); os.IsNotExist(err) {
+		if !needSetup {
+			fmt.Println("🔧 First time setup detected!")
+			needSetup = true
+		}
+		messageContent := []byte("Namaskaram ${name} 🙂\n\n🌟 This is a test. ✨  \n\nWith Joy,  \nIsha Volunteers 🙏\n")
+		if err := os.WriteFile(messageFilePath, messageContent, 0644); err != nil {
+			fmt.Printf("❌ Failed to create message.txt: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Printf("✅ Created: %s\n", messageFilePath)
+	}
+	
+	// Pause for user to customize files if setup was needed
+	if needSetup {
+		fmt.Println()
+		fmt.Println("📝 Please customize the files with your contacts and message.")
+		fmt.Print("   Press Enter to continue...")
+		scanner.Scan()
+		fmt.Println()
+	}
+
+	// Set default paths based on chosen directory
+	if *numbersPath == "" {
+		*numbersPath = numbersFilePath
+	}
+	if *messagePath == "" {
+		*messagePath = messageFilePath
+	}
+
+	fmt.Printf("📋 Using numbers file: %s\n", *numbersPath)
+	fmt.Printf("💬 Using message file: %s\n\n", *messagePath)
 
 	// Check if files exist
 	if _, err := os.Stat(*numbersPath); os.IsNotExist(err) {
 		fmt.Printf("❌ Numbers file not found: %s\n", *numbersPath)
 		os.Exit(1)
-	}
-
-	// Prompt for message file if not provided
-	if *messagePath == "" {
-		fmt.Print("💬 Enter path to message template file (default: ../sample/message.txt): ")
-		scanner.Scan()
-		input := strings.TrimSpace(scanner.Text())
-		if input == "" {
-			*messagePath = "../sample/message.txt"
-		} else {
-			*messagePath = input
-		}
 	}
 
 	if _, err := os.Stat(*messagePath); os.IsNotExist(err) {
