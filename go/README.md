@@ -31,7 +31,25 @@ go mod tidy
 
 ## Usage
 
-### Run from Source
+### Quick Start (Recommended)
+
+**First Run:**
+1. Run the program - it will automatically create sample files in `~/Downloads/whatsapp-broadcast/`
+2. Edit the files with your contacts and message
+3. Press Enter to continue
+4. Scan QR code when prompted
+5. Messages will be sent in test mode (first contact only)
+
+```bash
+go run main.go
+```
+
+**Subsequent Runs:**
+- The program will use existing files from `~/Downloads/whatsapp-broadcast/`
+- No need to specify file paths
+- Add actual message to be sent and the real contacts to send them to
+
+### Run Modes
 
 **Test Mode (sends to first contact only):**
 ```bash
@@ -89,14 +107,24 @@ whatsapp-broadcast.exe
 
 ```
 -n string
-    Path to numbers CSV file (default: ../sample/numbers.csv)
+    Path to numbers CSV file (default: ~/Downloads/whatsapp-broadcast/numbers.csv)
 -m string
-    Path to message template file (default: ../sample/message.txt)
+    Path to message template file (default: ~/Downloads/whatsapp-broadcast/message.txt)
 -full
     Send to all contacts (default: test mode - first contact only)
 -delay string
     Delay range in seconds (default: "15-35")
 ```
+
+## Default File Location
+
+On first run, the program automatically creates sample files in:
+- **macOS/Linux**: `~/Downloads/whatsapp-broadcast/`
+- **Windows**: `C:\Users\<username>\Downloads\whatsapp-broadcast\`
+
+Files created:
+- `numbers.csv` - Contact list with names and phone numbers
+- `message.txt` - Message template with ${name} placeholder
 
 ## File Formats
 
@@ -119,12 +147,15 @@ Thanks!
 ## First-Time Setup
 
 1. Run the application
-2. A QR code will appear in the terminal
-3. Open WhatsApp on your phone
-4. Go to: Menu → Linked Devices → Link a Device
-5. Scan the QR code
-6. Session is saved in `whatsapp-data/session.db`
-7. Next runs won't require QR scanning
+2. Sample files will be created in `~/Downloads/whatsapp-broadcast/`
+3. Edit the files with your contacts and message
+4. Press Enter to continue
+5. A QR code will appear in the terminal
+6. Open WhatsApp on your phone
+7. Go to: Menu → Linked Devices → Link a Device
+8. Scan the QR code
+9. Session is saved in `whatsapp-data/session.db`
+10. Next runs won't require QR scanning or file setup
 
 ## Session Storage
 
@@ -135,14 +166,17 @@ Thanks!
 ## Examples
 
 ```bash
-# Test run with default files
+# First run - creates sample files and runs in test mode
 go run main.go
+
+# Full broadcast with existing files
+go run main.go -full
 
 # Full broadcast with custom delay
 go run main.go -full -delay 20-40
 
 # Custom files in test mode
-go run main.go -n ~/contacts.csv -m ~/announcement.txt
+go run main.go -n ~/my-contacts.csv -m ~/my-message.txt
 
 # Build and run executable
 go build -o broadcast

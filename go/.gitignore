@@ -17,4 +17,6 @@ whatsapp-data/
 # Go workspace file
 go.work
 
+# macOS
 .DS_Store
+**/.DS_Store
