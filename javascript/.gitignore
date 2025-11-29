@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# WhatsApp authentication data
+.wwebjs_auth/
+.wwebjs_cache/
+
+# Environment files
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test files (optional - uncomment if needed)
+# test_*.csv
+# test_*.txt
